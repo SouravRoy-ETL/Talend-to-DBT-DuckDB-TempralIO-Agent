@@ -164,4 +164,4 @@ Issue: dbt models show "Circular Dependency".
 
 Fix: Check the NetworkX logs in migration.log. The topological sort may have failed due to a loop in the original Talend job (e.g., tLoop connected back to start).
 
-Lead Architect: Sourav License: MIT
+Lead Developer: Sourav License: MIT
