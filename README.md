@@ -45,8 +45,7 @@ The agent operates on a decoupled, four-tier pipeline:
 3.  **Intelligence Tier (`Ollama`):** Local LLM inference (Llama3) grounded by a deterministic Knowledge Base.
 4.  **Materialization Tier:** Generation of `.sql` models, Jinja macros, and `.py` Temporal activities.
 
-![Uploading image.png…]()
-
+![System Architecture Diagram](docs/architecture_diagram.png)
 
 ---
 
