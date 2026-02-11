@@ -1,113 +1,49 @@
-🚀 Talend-to-dbt Migration Agent
-An enterprise-grade, AI-augmented migration framework designed to refactor legacy Talend XML (.item) metadata into modular dbt SQL and Temporal.io Python workflows.
-
-📖 Table of Contents
-Overview
-
-System Architecture
-
-Hardware Optimization
-
-Temporal.io Orchestration
-
-Installation
-
-Quick Start
-
-Project Structure
-
-🧐 Overview
-The Talend-to-dbt Migration Agent automates the transition from imperative, Java-heavy Talend jobs to declarative, cloud-native dbt models. It utilizes local LLMs (via Ollama) to translate complex Java logic into high-performance DuckDB SQL while maintaining absolute logical parity through topological sorting.
-
-🏗 System Architecture
-The agent operates through a decoupled, four-tier pipeline:
-
-Ingestion Tier: Parses Talend .item files using lxml to extract metadata and predicates.
-
-Semantic Tier: Uses NetworkX to build a Directed Acyclic Graph (DAG) for component topological sorting.
-
-Intelligence Tier: Interfaces with local LLMs (Llama3/Mistral) to refactor Java routines into SQL.
-
-Materialization Tier: Generates finalized dbt models (.sql), macros, and Temporal SDK workflows.
-
-⚡ Hardware Optimization
-This agent is specifically tuned to "squeeze" maximum performance from high-end consumer hardware:
-
-GPU (NVIDIA RTX 5070 Ti Super): Utilizes num_gpu=999 to lock the model entirely in VRAM (16GB), preventing PCIe bus saturation.
-
-CPU (Intel i7-14700K): Targets the 8 high-performance P-Cores for parallel metadata parsing and graph resolution.
-
-Concurrency: Configured with MAX_WORKERS=8 for simultaneous batch processing.
-
-⏳ Temporal.io Orchestration
-Unlike basic converters, this agent treats ETL as a distributed workflow. It generates Temporal.io Python SDK code to manage:
-
-File-Based Triggers: Sensing and reacting to file arrivals in the landing zone.
-
-State Management: Tracking job status and handling retries across complex multi-job chains.
-
-Orchestration: Replacing legacy Talend tRunJob and tLoop components with fault-tolerant Python activities.
-
-🛠 Installation
-1. Prerequisites
-Python: 3.10 or higher
-
-Ollama: Running locally (ollama serve)
-
-Temporal: Local server or Cloud access (temporal server start-dev)
-
-2. Clone and Setup
-Bash
-git clone https://github.com/your-username/talendtodbtsouravagent.git
+🚀 Talend-to-dbt Migration Agent (talendtodbtsouravagent)Enterprise-Grade Logic Refactoring & Orchestration EngineAn AI-augmented migration framework designed to refactor legacy Talend XML (.item) metadata into modular dbt SQL models and high-durability Temporal.io Python workflows. This agent bridges the gap between imperative legacy ETL and declarative modern data stacks.📖 Table of ContentsOverviewSystem ArchitectureHardware Optimization (The Squeeze)Temporal.io OrchestrationInstallationQuick StartProject StructureTroubleshooting🧐 OverviewThe Talend-to-dbt Migration Agent is not just a code translator; it is a logic refactoring engine. It parses the deep semantic structure of Talend jobs to ensure 1:1 behavioral parity while modernizing the codebase.Key Capabilities:Semantic Parsing: Extracts logic from tMap, tFilterRow, and tAggregateRow using lxml.Topological Sorting: Solves the DAG to ensure SQL Common Table Expressions (CTEs) are ordered correctly.Java-to-SQL Bridge: Converts proprietary Java routines (e.g., TalendDate.getCurrentDate()) into native DuckDB SQL.Workflow Modernization: Replaces tRunJob and tLoop with fault-tolerant Temporal workflows.🏗 System ArchitectureThe agent operates on a decoupled, four-tier pipeline:Ingestion Tier (lxml): Namespace-agnostic parsing of .item and .properties files.Semantic Tier (NetworkX): Mathematical resolution of component dependencies (DAG Solver).Intelligence Tier (Ollama): Local LLM inference (Llama3) grounded by a deterministic Knowledge Base.Materialization Tier: Generation of .sql models, Jinja macros, and .py Temporal activities.⚡ Hardware Optimization (The Squeeze)This project is specifically tuned to saturate high-end consumer hardware. Default configurations are locked for the NVIDIA RTX 5070 Ti Super and Intel i7-14700K.ComponentSettingTechnical RationaleGPU VRAMnum_ctx = 4096Prevents System RAM swapping by keeping the context window entirely in the 16GB VRAM.CUDA Coresnum_gpu = 999Forces 100% of model layers to offload to the GPU.CPU ThreadsMAX_WORKERS = 8Targets the 8 Performance-Cores (P-Cores) of the i7-14700K for parallel parsing.⏳ Temporal.io OrchestrationWe treat ETL migration as a distributed system problem. This agent generates Temporal Workflows to replace legacy Talend job schedulers.File Sensors: Replaces tWaitForFile. The generated Python worker polls directories and triggers workflows upon file arrival.Retries & Heartbeats: Replaces tLogCatcher. Temporal automatically handles retries for transient failures without custom error-handling logic.Child Workflows: Replaces tRunJob. Complex job chains are modeled as parent-child workflow executions.🛠 Installation1. PrerequisitesPython 3.10+ installed.Ollama installed and running (ollama serve).Temporal CLI installed for local development.2. Clone the RepositoryBashgit clone https://github.com/sourav/talendtodbtsouravagent.git
 cd talendtodbtsouravagent
-3. Pip Commands
-Install core dependencies using the optimized stack:
-
-Bash
-# Update pip
+3. Install DependenciesWe use a targeted requirements.txt to minimize bloat.Bash# Upgrade pip first
 python -m pip install --upgrade pip
 
-# Install core migration engine components
-pip install lxml networkx langchain_ollama pandas
+# Install Core Engine & Parsing Tools
+pip install lxml networkx pandas
 
-# Install dbt and target adapter
-pip install dbt-core dbt-duckdb
+# Install AI & LangChain Integration
+pip install langchain-ollama langchain-core
 
-# Install Temporal SDK
+# Install Target Adapters (dbt & DuckDB)
+pip install dbt-core dbt-duckdb duckdb
+
+# Install Orchestration SDK
 pip install temporalio
-🚀 Quick Start
-1. Prepare Metadata
-Place your exported Talend .item XML files into the input_data/ directory.
+🚀 Quick StartStep 1: Initialize Local ServicesStart your local LLM server and Temporal backend.Bash# Terminal 1: Start Ollama
+ollama serve
 
-2. Configure Environment
-Update src/config.py with your hardware-specific parameters:
+# Terminal 2: Start Temporal Dev Server
+temporal server start-dev
+Step 2: Ingest DataExport your Talend Jobs as items (do not export as scripts). Place the .item and .properties files into the input_data/ folder.Step 3: Configure HardwareOpen src/config.py and ensure the hardware profile matches your rig:Python# src/config.py
+LLM_CONFIG = {
+    "model": "llama3",
+    "num_ctx": 4096,  # RTX 5070 Ti Super VRAM Lock
+    "num_gpu": 999
+}
 
-Python
-# Hardware Squeeze Profile
-NUM_CTX = 4096
-NUM_GPU = 999  # RTX 5070 Ti Super Optimized
-MAX_WORKERS = 8 # i7-14700K P-Core Affinity
-3. Run Migration
-Bash
-# Initialize Ollama
-ollama run llama3
-
-# Execute the master migration script
-python run_migration.py
-4. Run Temporal Worker
-Bash
-# Start the worker to handle generated file-based workflows
-python src/temporal_worker.py
-📂 Project Structure
-Plaintext
-talendtodbtsouravagent/
-├── input_data/               # Source Talend XML files (.item)
-├── output/                   # Resultant migration artifacts
-│   ├── models/               # Generated dbt SQL CTEs
-│   ├── macros/               # Reusable dbt macros
-│   └── temporal/             # Temporal.io Python workflows
+PARALLEL_CONFIG = {
+    "max_workers": 8  # i7-14700K P-Core Count
+}
+Step 4: Execute MigrationRun the master orchestrator to begin the conversion.Bashpython run_migration.py
+Step 5: Start Orchestration WorkerOnce migration is complete, start the Temporal worker to begin processing file triggers.Bashpython src/temporal_worker.py
+📂 Project StructurePlaintexttalendtodbtsouravagent/
+├── input_data/               # Drop your Talend .item files here
+├── output/
+│   ├── models/               # Generated dbt SQL models (CTEs)
+│   ├── macros/               # Generated dbt Macros (Joblets)
+│   └── temporal/             # Generated Temporal Workflow Definitions
 ├── src/
-│   ├── main_engine.py        # Master parallel orchestrator
-│   ├── agent_llm.py          # AI logic & prompt engine
-│   └── knowledge_base.py     # Deterministic mapping (800+ rules)
-└── run_migration.py          # Unified entry point
+│   ├── main_engine.py        # Master Parallel Orchestrator
+│   ├── agent_llm.py          # LLM Logic & Prompt Engineering
+│   ├── graph_builder.py      # NetworkX DAG Solver
+│   ├── knowledge_base.py     # Deterministic Component Map
+│   └── temporal_worker.py    # Temporal.io Worker Entrypoint
+├── run_migration.py          # Main Execution Script
+├── requirements.txt          # Python Dependencies
+└── README.md                 # Documentation
+🔧 TroubleshootingIssue: CUDA Out of Memory error during inference.Fix: Reduce num_ctx in src/config.py to 2048 or close other GPU-intensive applications.Issue: dbt models show "Circular Dependency".Fix: Check the NetworkX logs in migration.log. The topological sort may have failed due to a loop in the original Talend job (e.g., tLoop connected back to start).Lead Architect: SouravLicense: MIT
