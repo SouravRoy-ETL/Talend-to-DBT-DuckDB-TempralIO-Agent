@@ -1,4 +1,3 @@
-# Talend-to-DBT-DuckDB-TempralIO-Agent
 🚀 Talend-to-dbt Migration Agent
 An enterprise-grade, AI-augmented migration framework designed to refactor legacy Talend XML (.item) metadata into modular dbt SQL and Temporal.io Python workflows.
 
