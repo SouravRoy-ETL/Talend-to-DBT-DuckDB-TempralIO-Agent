@@ -1,0 +1,7 @@
+langchain-ollama
+networkx
+lxml
+jinja2
+temporalio
+colorama
+pydantic
